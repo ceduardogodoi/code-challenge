@@ -1,0 +1,161 @@
+body {
+  margin: 0;
+  font-family: Courier New, sans-serif;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+h1,
+h2 {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+.transactions__summary-card {
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.date-range__form fieldset {
+  border: 1px solid lightgray;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 16px;
+}
+
+.date-range__label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.date-range__input {
+  border: unset;
+  border-bottom: 1px solid lightgray;
+  font-size: 14px;
+  padding: 12px;
+}
+
+.date-range__actions {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.date-range__actions .btn {
+  flex-grow: 1;
+}
+
+.transactions__table-container {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.transactions__table {
+  border: 1px solid gray;
+  border-collapse: collapse;
+}
+
+.transactions__table td,
+.transactions__table th {
+  border: 1px solid gray;
+  padding: 16px;
+  text-align: left;
+}
+
+.transactions__table th {
+  background-color: lightgray;
+}
+
+.btn {
+  background-color: lightgray;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: black;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px;
+}
+
+.btn:active {
+  opacity: 0.5;
+}
+
+.btn:disabled {
+  background-color: gray;
+  color: white;
+  cursor: not-allowed;
+}
+
+.btn--submit {
+  background-color: lightgreen;
+  color: black;
+  transition: background-color 250ms, color 250ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:not(:disabled):hover {
+    background-color: gray;
+    color: black;
+  }
+
+  .btn--submit:not(:disabled):hover {
+    background-color: green;
+    color: white;
+  }
+}
+
+.pagination {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  list-style: none;
+  margin: unset;
+  padding: unset;
+}
+
+.pagination button {
+  background-color: transparent;
+  border: transparent;
+  border-block-end: 1px solid gray;
+  cursor: pointer;
+  padding-block-end: 2px;
+  transition: opacity 250ms;
+}
+
+.pagination button[data-active="true"] {
+  border-block-end-color: transparent;
+  cursor: default;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pagination button[data-active="false"]:hover {
+    opacity: 0.5;
+  }
+}
