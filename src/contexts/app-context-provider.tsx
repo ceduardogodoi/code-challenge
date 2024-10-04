@@ -5,10 +5,16 @@ import type { AppContextValues, RangeParams } from "./app-context.types";
 import { AppContext } from "./app-context";
 import dayjs from "dayjs";
 
+const itemsPerPage = 10;
+
 const initialState: AppContextValues = {
-  initialTransactions: db.transactions,
-  transactionsQuantity: db.transactions.length,
   transactions: db.transactions,
+  transactionsCount: db.transactions.length,
+  itemsPerPage,
+  transactionsQuantity: db.transactions.length,
+  currentTransactions: db.transactions.slice(0, itemsPerPage),
+  currentPage: 1,
+  pagesQuantity: Math.ceil(db.transactions.length / itemsPerPage),
 };
 
 export function AppContextProvider({ children }: PropsWithChildren) {
@@ -19,23 +25,38 @@ export function AppContextProvider({ children }: PropsWithChildren) {
     const finalDate = dayjs(endDate);
 
     setState((prev) => {
-      return {
-        ...prev,
-        transactions: prev.initialTransactions.filter((transaction) => {
+      const currentTransactions = prev.transactions
+        .filter((transaction) => {
           return (
             initialDate.isBefore(transaction.date) &&
             finalDate.isAfter(transaction.date)
           );
-        }),
+        })
+        .slice(0, itemsPerPage);
+
+      return {
+        ...prev,
+        currentPage: initialState.currentPage,
+        currentTransactions,
+        transactionsQuantity: currentTransactions.length,
+        pagesQuantity: Math.ceil(currentTransactions.length / itemsPerPage),
       };
     });
   }
 
   function resetFilters() {
+    setState({ ...initialState });
+  }
+
+  function goToPage(page: number) {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
     setState((prev) => {
       return {
         ...prev,
-        transactions: [...prev.initialTransactions],
+        currentPage: page,
+        currentTransactions: prev.transactions.slice(startIndex, endIndex),
       };
     });
   }
@@ -46,6 +67,7 @@ export function AppContextProvider({ children }: PropsWithChildren) {
         ...state,
         filterByRange,
         resetFilters,
+        goToPage,
       }}
     >
       {children}

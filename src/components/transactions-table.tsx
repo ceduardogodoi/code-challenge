@@ -5,7 +5,7 @@ import { DateRangeFilter } from "./date-range-filter";
 import { Pagination } from "./pagination";
 
 export function TransactionsTable() {
-  const { transactions } = useAppContext();
+  const { currentTransactions } = useAppContext();
 
   return (
     <>
@@ -24,7 +24,7 @@ export function TransactionsTable() {
           </thead>
 
           <tbody>
-            {transactions.map((transaction, index) => (
+            {currentTransactions.map((transaction, index) => (
               <tr key={transaction.id}>
                 <td>{index + 1}</td>
                 <td>{transaction.id}</td>

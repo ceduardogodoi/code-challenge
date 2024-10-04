@@ -6,13 +6,18 @@ export type RangeParams = {
 };
 
 export type AppContextValues = {
-  initialTransactions: Transaction[];
+  readonly transactions: Transaction[];
+  readonly transactionsCount: number;
+  readonly itemsPerPage: number;
   transactionsQuantity: number;
-  transactions: Transaction[];
+  currentTransactions: Transaction[];
+  currentPage: number;
+  pagesQuantity: number;
 };
 export type AppContextActions = {
   filterByRange: (params: RangeParams) => void;
   resetFilters: () => void;
+  goToPage: (page: number) => void;
 };
 
 export type AppContextType = AppContextValues & AppContextActions;

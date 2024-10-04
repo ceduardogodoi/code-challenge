@@ -1,21 +1,37 @@
+import { useAppContext } from "../contexts/use-app-context";
+import { range } from "../utils/range";
+
 export function Pagination() {
+  const { currentPage, goToPage, pagesQuantity, transactionsQuantity } =
+    useAppContext();
+
+  function handleGoToPage(page: number) {
+    goToPage(page);
+  }
+
+  if (pagesQuantity < 2) return null;
+
   return (
-    <ul className="pagination">
-      <li>
-        <button data-active={true} type="button">
-          1
-        </button>
-      </li>
-      <li>
-        <button data-active={false} type="button">
-          2
-        </button>
-      </li>
-      <li>
-        <button data-active={false} type="button">
-          3
-        </button>
-      </li>
-    </ul>
+    <div className="pagination__container">
+      <span>Items: {transactionsQuantity}</span>
+
+      <ul className="pagination">
+        {range(pagesQuantity).map((pageNumber) => {
+          const isActive = pageNumber === currentPage;
+
+          return (
+            <li key={pageNumber}>
+              <button
+                data-active={isActive}
+                type="button"
+                onClick={() => handleGoToPage(pageNumber)}
+              >
+                {pageNumber}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
