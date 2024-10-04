@@ -1,7 +1,9 @@
+import dayjs from "dayjs";
+
 export function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("en-US").format(date);
+  return dayjs(date).format("MM/DD/YYYY");
 }
 
 export function formatToDateTime(date: Date) {
-  return date.toISOString().split("T")[0];
+  return dayjs(date).format("YYYY-MM-DD");
 }

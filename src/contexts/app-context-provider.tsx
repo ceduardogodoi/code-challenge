@@ -3,12 +3,15 @@ import { PropsWithChildren, useState } from "react";
 import { db } from "../mocks/db";
 import type { AppContextValues, RangeParams } from "./app-context.types";
 import { AppContext } from "./app-context";
-import dayjs from "dayjs";
+import {
+  filterByDateRange,
+  sortTransactionsAscending,
+} from "../utils/transaction";
 
 const itemsPerPage = 10;
 
 const initialState: AppContextValues = {
-  transactions: db.transactions,
+  transactions: db.transactions.sort(sortTransactionsAscending),
   transactionsCount: db.transactions.length,
   itemsPerPage,
   transactionsQuantity: db.transactions.length,
@@ -21,23 +24,15 @@ export function AppContextProvider({ children }: PropsWithChildren) {
   const [state, setState] = useState<AppContextValues>(initialState);
 
   function filterByRange({ startDate, endDate }: RangeParams) {
-    const initialDate = dayjs(startDate);
-    const finalDate = dayjs(endDate);
-
     setState((prev) => {
       const currentTransactions = prev.transactions
-        .filter((transaction) => {
-          return (
-            initialDate.isBefore(transaction.date) &&
-            finalDate.isAfter(transaction.date)
-          );
-        })
-        .slice(0, itemsPerPage);
+        .filter(filterByDateRange(startDate, endDate))
+        .sort(sortTransactionsAscending);
 
       return {
         ...prev,
         currentPage: initialState.currentPage,
-        currentTransactions,
+        currentTransactions: currentTransactions.slice(0, itemsPerPage),
         transactionsQuantity: currentTransactions.length,
         pagesQuantity: Math.ceil(currentTransactions.length / itemsPerPage),
       };
@@ -49,14 +44,19 @@ export function AppContextProvider({ children }: PropsWithChildren) {
   }
 
   function goToPage(page: number) {
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
     setState((prev) => {
+      const startIndex = (page - 1) * itemsPerPage;
+      const endIndex =
+        startIndex + itemsPerPage > prev.transactionsQuantity
+          ? prev.transactionsQuantity
+          : startIndex + itemsPerPage;
+
+      const currentTransactions = prev.transactions.slice(startIndex, endIndex);
+
       return {
         ...prev,
         currentPage: page,
-        currentTransactions: prev.transactions.slice(startIndex, endIndex),
+        currentTransactions,
       };
     });
   }
